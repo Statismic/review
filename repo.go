@@ -16,7 +16,7 @@ const (
 // repository is located.
 func repoClone(url string, ref string) (string, error) {
 	// Create a tmp dir
-	dir, err := ioutil.TempDir("", Name)
+	dir, err := ioutil.TempDir("", "")
 	if err != nil {
 		os.RemoveAll(dir)
 		return "", err

@@ -10,8 +10,15 @@ import (
 func Router() http.Handler {
 	r := chi.NewRouter()
 
-	box := rice.MustFindBox("public")
-	r.Get("/", http.FileServer(box.HTTPBox()).ServeHTTP)
+	cssHandler := http.FileServer(rice.MustFindBox("public/css").HTTPBox())
+	cssHandler = http.StripPrefix("/css/", cssHandler)
+
+	jsHandler := http.FileServer(rice.MustFindBox("public/js").HTTPBox())
+	jsHandler = http.StripPrefix("/js/", jsHandler)
+
+	r.Get("/", http.FileServer(rice.MustFindBox("public").HTTPBox()).ServeHTTP)
+	r.Get("/css/*", cssHandler.ServeHTTP)
+	r.Get("/js/*", jsHandler.ServeHTTP)
 	r.Post("/clone", cloneMasterAndPR)
 	r.Route("/{id}", func(r chi.Router) {
 		r.Get("/master/*", masterHandler)

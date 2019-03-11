@@ -25,9 +25,16 @@
         <ion-button v-show="validated" color="primary" @click="review()">Review</ion-button>
       </div>
 
-      <div id="container" v-else>
-        <viewer :url="`/${uuid}/master/`" title="Master" style="width: 50%; height: 100%;"></viewer>
-        <viewer :url="`/${uuid}/pr/`" :title="`PR #${prID}`" style="width: 50%; height: 100%;"></viewer>
+      <div v-else style="display: flex; flex-direction: column; height: 100%; align-items: center;">
+        <ion-select value="both" @ionChange="onVisibilityChange($event)">
+          <ion-select-option value="master">Master</ion-select-option>
+          <ion-select-option value="pr">PR</ion-select-option>
+          <ion-select-option value="both">Both</ion-select-option>
+        </ion-select>
+        <div id="container">
+          <viewer v-show="isMasterVisible" :url="`/${uuid}/master/`" title="Master"></viewer>
+          <viewer v-show="isPRVisible" :url="`/${uuid}/pr/`" :title="`PR #${prID}`"></viewer>
+        </div>
       </div>
 
       <ion-spinner name="crescent" color="primary" id="loading" v-show="loading"></ion-spinner>
@@ -55,7 +62,9 @@ export default {
       url: "",
       prID: -1,
       loading: false,
-      uuid: ""
+      uuid: "",
+      isMasterVisible: true,
+      isPRVisible: true
     };
   },
   computed: {
@@ -65,6 +74,22 @@ export default {
     }
   },
   methods: {
+    onVisibilityChange(e) {
+      const visibility = e.target.value;
+      switch (visibility) {
+        case "master":
+          this.isMasterVisible = true;
+          this.isPRVisible = false;
+          break;
+        case "pr":
+          this.isMasterVisible = false;
+          this.isPRVisible = true;
+          break;
+        default:
+          this.isMasterVisible = true;
+          this.isPRVisible = true;
+      }
+    },
     onChangeID(e) {
       this.prID = parseInt(e.target.value);
     },

@@ -34,7 +34,7 @@ func cloneMasterAndPR(w http.ResponseWriter, r *http.Request) {
 
 	masterDir, err := repoCloneMaster(c.URL)
 	if err != nil {
-		http.Error(w, "failed to close master repo", http.StatusInternalServerError)
+		http.Error(w, "failed to clone master repo", http.StatusInternalServerError)
 		return
 	}
 
@@ -66,9 +66,6 @@ func masterHandler(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	info := handlerMap.Get(id)
 
-	fmt.Println(r.URL.Path)
-	fmt.Println(id)
-	fmt.Println(info.masterDir)
 	handler := http.FileServer(http.Dir(info.masterDir))
 	handler = http.StripPrefix(fmt.Sprintf("/%s/master", id), handler)
 	handler.ServeHTTP(w, r)

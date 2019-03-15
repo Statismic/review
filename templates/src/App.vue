@@ -120,6 +120,8 @@ export default {
       this.url = "";
       this.prID = -1;
       this.uuid = "";
+      this.isMasterVisible = true;
+      this.isPRVisible = true;
     }
   }
 };

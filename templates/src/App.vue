@@ -18,6 +18,7 @@
             type="url"
             placeholder="Repo's url"
             class="input"
+            :value="url"
             @ionChange="onChangeURL($event)"
           ></ion-input>
         </ion-item>
@@ -117,7 +118,6 @@ export default {
       }
     },
     reset() {
-      this.url = "";
       this.prID = -1;
       this.uuid = "";
       this.isMasterVisible = true;
